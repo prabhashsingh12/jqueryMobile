@@ -1,0 +1,1843 @@
+<html>
+    <head>
+        <meta name="format-detection" content="telephone=no" />
+        <meta name="viewport" content="user-scalable=no,width=600px" />
+        <!--<meta name="viewport" content="width=600px; initial-scale=0.1; maximum-scale=0.1" />-->
+        <link rel="stylesheet" href="css/jquery.mobile-1.4.0.min.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.theme-1.4.0.css" />
+        <link rel="stylesheet" href="css/index.css" />
+        <link rel="stylesheet" href="css/jquery.mobile.iscrollview.css" />
+        <script src="cordova.js"></script>
+        <script src="js/jquery-1.10.2.min.js"></script>
+        <script src="js/jquery.mobile-1.4.0.min.js"></script>
+        <script src="cdv-plugin-fb-connect.js"></script>
+        <script src="facebook-js-sdk.js"></script>
+        <script src="js/config.js"></script>
+        <script src="js/facebook.js"></script>
+        <script src="js/utility.js"></script>
+        <script src="js/index.js"></script>
+        <script src="js/localdb.js"></script>
+        <script src="js/validation.js"></script>   
+        <script src="js/iscroll.js"></script> 
+        <script src="js/jquery.mobile.iscrollview.js"></script> 
+        <script>
+            $(document).on("mobileinit", function() {
+
+                $.mobile.defaultPageTransition = 'slide';
+
+            });
+        </script>
+
+    </head>
+
+    <body>
+
+
+        <!-- Home screen page -->
+        <div data-role="page" id="home" class="home">
+
+            <div data-role="content">
+                <div class="tb">
+                    <div class="tbCell">
+                        <a data-role="button" data-corners="false" class='button' href="#login" >
+                            Sign In with Email
+                        </a>
+                        <a data-role="button" id="btn_fblogin" data-corners="false" class='button' onclick="facebook.login()">
+                            Sign In with Facebook
+                        </a>
+                        <hr>
+                        <a data-role="button" data-corners="false" class='button' href="#register" >Sign Up with Email</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- // Home page Ends here -->
+
+
+        <!-- login screen -->
+        <div data-role="page" id="login" >
+            <div data-role="none" class="header" data-theme="none">
+                <a data-role='button' class="backbutton" data-icon='back' data-iconpos='notext'>Back</a>
+                Sign In with Email                
+            </div>
+
+            <div role="main" class="ui-content" id="loginfields">
+                <input type="email" id="id" name='login_email' data-error="Please provide valid email" placeholder="Email" class='vemail'/>
+                <input type="Password" id="password" name='login_password' data-error="Please provide correct password" placeholder="Password" class='require' />
+                <label for="checkboxq">
+                    <input data-role="none" id="checkbox" type="checkbox" name="checkbox">
+                    <label for="checkbox" class="checkBG"></label>
+                    Show Password
+                </label>
+                <span><button id="signin" class="button" onclick="utility.validatingLoginField('loginfields', 'edit-profile-page')" data-corners="false">Sign In</button></span>
+                <span><a data-role="button" data-corners="false" class='button' href="#forgotpasswordpage"  >Forgot Password</a></span>
+            </div>
+        </div>
+        <!-- //login screen end here -->
+
+        <!-- forget password -->
+        <div data-role="page" id="forgotpasswordpage" >
+            <div data-role="header" id="reset" class="header" data-theme="none" >
+                <a data-role='button' data-icon='back' data-iconpos='notext' class='backbutton'>Back</a>
+                Reset Password                
+            </div>
+            <div role="main" class="ui-content">
+                <div id="forgotdiv">
+                    <label id="forgotlabel">Please enter your registered email id and click reset password. An email shall be sent to your registered email id with the new password.</label>
+                    <input id="email" name="forgot_email" type="email" data-error="Please enter valid email" placeholder="Email" class="vemail">
+                    <div id="err_frgtpwd" style="color: #F12C2C;"></div>
+                    <span><button id="forgot_password" class="button"  data-corners="false" onclick="utility.validatingResetPassword('forgotpasswordpage', 'login')">Reset Password</button></span>
+                </div>
+            </div>
+
+        </div>
+        <!-- // forget password -->
+
+        <!-- register screen here -->
+        <div data-role="page"  id="register">
+            <div data-role="header" data-theme="none" class="header">
+                <a data-role='button' class="backbutton" data-icon='back' data-iconpos='notext' ></a>
+                Sign Up with Email                
+            </div>
+
+            <div data-role="content" id="registeruser" >
+
+                <input type="text" data-prevent-focus-zoom="false"  data-theme="none" placeholder="User Name" name='signup_name' id="signup_name" data-error="Please provide correct user name" class="require">
+                <input type="email"  data-prevent-focus-zoom="false" data-theme="none" placeholder="Email" name='signup_email' id="signup_email" data-error="Please provide valid email" class="vemail">
+                <input type="password"  data-prevent-focus-zoom="false" data-theme="none" placeholder="Password" name='signup_password' id="signup_password"  data-error="Please provide correct password" class="require" >
+
+                <label for="checkboxq">
+                    <input data-role="none"  data-theme='none' id="condition" type="checkbox" name="condition" class="rcheckbox" data-error="Please Agree With Terms And Conditions" >
+                    <label for="condition" class="checkBG"></label>
+                    I agree to the <a id="ilab" data-theme='b'>terms and conditions</a>
+                </label>
+
+                <label for="checkboxq">
+                    <input data-role="none"  data-theme='none' id="integrity" type="checkbox" name="integrity" class="rcheckbox" data-error="Please Agree With Integrity" >
+                    <label for="integrity" class="checkBG"></label>
+                    I agree to <a id="clab" data-theme='b'>data integrity</a>
+                </label>
+
+                <span><button class="button" id="signup_submit" data-corners="false" onclick="utility.validatingRegistartion('registeruser', 'login', true)">Sign Up</button></span>
+            </div>
+
+            <div data-role="popup" id="verifydialog" class="ui-content" style="max-width:800px;width:400px;" data-dismissible="false">
+                <p class="verfymsg"></p>
+                <a data-role="button" id='verifybtn'>Ok</a>
+            </div>
+        </div>
+        <!-- //register screen here -->
+
+        <!-- term condition screen here -->
+        <div data-role="page" id="termsandintigrity_facebook">
+            <div data-role="header" data-theme="none" class="header"  >
+                Terms and Condition
+            </div>
+
+            <div data-role="content" id="tandc_content">
+                <input type='text' id='fbid_for_tanc' name='fbid_for_tanc' style='display:none;'/>
+                <label for="checkboxq">
+                    <input data-role="none"  data-theme='none' id="conditionfacebook" type="checkbox" name="conditionfacebook" value="1" class="rcheckbox" data-error="Please Agree With Terms And Conditions" >
+                    <label for="conditionfacebook" class="checkBG"></label>
+                    I agree to the <a id="clabfacebook" data-theme='b'>terms and conditions</a>
+                </label>
+
+                <label for="checkboxq">
+                    <input data-role="none"  data-theme='none' id="integrityfacebook" type="checkbox" name="integrityfacebook" class="rcheckbox" data-error="Please Agree With Integrity" >
+                    <label for="integrityfacebook" class="checkBG"></label>
+                    I agree to <a id="ilabfacebook" data-theme='b'>data integrity</a>
+                </label>
+                <span><button class="button"  id="iagreetandc" data-corners="false">I agree</button></span>
+                <span><button class="button"  id="iagreetandccancel" data-corners="false">Cancel</button></span>
+            </div>
+        </div>
+        <!-- //term condition screen here -->
+
+        <!-- Edit profile screen -->
+        <div data-role="page" id="edit-profile-page">
+            <div data-role="header" class="header" data-theme="none"  id="headereditp" >
+                <span class="menuicon" onclick="utility.openPanel('editprofilepanel')"></span>
+                Edit Profile
+                <span id="msgspan"></span>
+            </div>
+
+            <div data-role="content" id="editprofilecontent" data-iscroll="">
+                <div class="userdata">
+                    <img id="edituserimg" />
+                    <span id="wname" class="displayname"></span>
+                    <span class="editimg active"></span>
+                </div>
+
+                <div id="edituserdiv">
+                    <input type='text' data-role="none" id='ids' name='id' style='display:none;' class='input' value=''>
+                    <input type='text' data-role="none" id='userpic' name='userpic' style='display:none;' class='input'>
+
+                    <div data-role="fieldcontain">
+                        <label for="dobs" class="eulab">Date of Birth</label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" class="editfieldset" id="datefieldset">
+                            <span>
+                                <select  name="date" class="input" id="dy" data-role="none"></select>
+                                <select  name="month" class="input"  id="mt" onchange="datepick.prototype.populate();" data-role="none">
+                                    <option value="1">Jan</option>
+                                    <option value="2">Feb</option>
+                                    <option value="3">Mar</option>
+                                    <option value="4">Apr</option>
+                                    <option value="5">May</option>
+                                    <option value="6">Jun</option>
+                                    <option value="7">Jul</option>
+                                    <option value="8">Aug</option>
+                                    <option value="9">Sep</option>
+                                    <option value="10">Oct</option>
+                                    <option value="11">Nov</option>
+                                    <option value="12">Dec</option>
+
+                                </select>
+                                <select  name="year" class="input" id="yr" onchange="datepick.prototype.populate();" data-role="none"></select>
+                            </span>
+                        </fieldset>     
+                    </div>
+
+                    <div data-role="fieldcontain">  
+
+                        <label for="gender" class="eulab">Gender</label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" class="editfieldset">
+                            <select id="gender" name="gender" class="input" data-role="none">
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                            </select> 
+                        </fieldset>     
+                    </div> 
+
+                    <div data-role="fieldcontain">      
+
+                        <label for="family" class="eulab">Family </label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" class="editfieldset" id="familyfieldset">
+                            <span class="incrinputfamily" data-attr='2'>
+                                <img id="plusfamily" src="img/plus.png" class="plus" >
+                                <input style="display: block;" type="text" id='fam' name="family" data-error="Please enter family" class='input'>
+
+                            </span>
+                        </fieldset>
+                    </div>       
+
+                    <div data-role="fieldcontain">   
+
+                        <label for="countryoforigin" class="eulab">Country of Origin</label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" class="editfieldset">
+                            <select name="countryoforigin" class="input" data-role="none">
+                                <option>austrlia</option>
+                                <option>india</option>
+                                <option>pakistan</option>
+                                <option>taliban</option>
+                                <option>canada</option>
+                                <option>england</option>
+                            </select>
+
+                        </fieldset>
+                    </div> 
+
+                    <div data-role="fieldcontain">      
+                        <h3>Country of Residence</h3>
+                    </div>
+
+                    <div data-role="fieldcontain">    
+                        <label for="current" class="eulab">Current </label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" class="editfieldset" >
+
+                            <input id="current" data-role="none" type="text" name="current" data-error="Please enter current location" class='input' style="display:none;" />
+
+                            <div id="citydiv">
+                                <ul id="autocomplete" data-role="listview" data-icon="none"  class='input'  data-filter="true" data-filter-placeholder="Find a city..." >
+                                </ul>
+                                <br/>
+                            </div>
+                        </fieldset>
+                    </div>    
+                    <div data-role="fieldcontain">     
+                        <label for="Previous" class="eulab">Previous</label>
+                        <fieldset data-role="controlgroup" data-type="horizontal" data-mini="true" class="editfieldset">
+                            <span class="incrinput" data-attr='2'>
+                                <img id="plusprevious" src="img/plus.png" class="plus">
+                                <input style="display: block;" type="text" id='prev' name="previous" data-error="Please enter previous location" class='input'/>
+                            </span>                     
+                        </fieldset>
+                    </div> 
+
+                    <button id="saveprofileinfo" name="submit" class="button signup" onclick="utility.validatingeditprofile('editprofilecontent', 'viewprofile', true)">Save</button>
+
+
+                </div>
+
+            </div>
+
+
+            <div data-role="popup" id="takemypicturepopup" class="ui-content" style="max-width:800px;width:400px;" data-dismissible="false">
+
+
+                <label>Take Photograph</label>
+                <button onclick="capturePhoto();" class="button">Capture Photo</button>
+                <br>
+                <button onclick="getPhoto();" class="button">From Photo Album</button>
+                <br>
+                <a  data-role='button'  class='okButton' >Close</a>
+                <br> 
+            </div>
+
+            <div data-role="panel" class="panel" id="editprofilepanel" data-position="left" data-display="overlay" data-corners="false" data-theme="none" data-shadow="false" data-tolerance="0,0">
+                <ul>
+                    <li class="mydream">My Dream</li>
+                    <li class="taggeddream">Tagged Dream</li>
+                    <li class="btn_dream_post">Log Dream</li>
+                    <li class="btn_view_profile">View Profile</li>
+                    <li class="btn_dreamfeed">Dreams Feed</li>
+                    <li class="logout">LogOut</li>
+                </ul>
+            </div>
+        </div>
+        <!-- //Edit profile screen -->
+
+        <!-- View profile screen -->
+        <div data-role="page" id="viewprofile">
+            <div data-role="header" id="vpheader" class="header"  data-theme="none">
+                <span class="menuicon" onclick="utility.openPanel('popupPanel')"></span>My Profile</div>
+            <div role="main" class="ui-content" data-iscroll="">
+                <div class="userdata">
+                    <img id="userimg">
+                    <span id="viewname" class="displayname"></span>
+                    <span class="editimg" id="edit"></span>
+                </div>
+                <div class="box">
+                    <div id="info"> </div>
+                </div>  
+            </div>
+            <div data-role="panel" class="panel" id="popupPanel" data-position="left" data-display="overlay" data-corners="false" data-theme="none" data-shadow="false" data-tolerance="0,0">
+                <ul>
+                    <li class="mydream">My Dream</li>
+                    <li class="taggeddream">Tagged Dream</li>
+                    <li class="btn_dream_post">Log Dream</li>
+                    <li class="btn_view_profile">View Profile</li>
+                    <li class="btn_dreamfeed">Dreams Feed</li>
+                    <li class="logout">LogOut</li>
+                </ul>
+            </div>
+        </div><!-- View Profile page end here -->
+        <!-- View profile screen -->
+
+        <!-- crop -->
+        <div data-role="page" id="croppage">
+            <div data-role="header" id="vpheader" class="header"  data-theme="none">
+               Crop Image</div>
+            <div data-role="content">
+                <div class="box">
+                    <canvas id="panel"></canvas>
+                    <button id="cropbtn" onclick="cropimg()" class="button">Load Photo</button>
+                    <button id="cropresult" onclick="getResults()" class="button">Crop Photo</button>
+                </div>
+            </div>
+        </div>
+        <!-- // crop -->
+
+        <div data-role="page" id="logdream">
+            <div data-role="header" id="ldheader" class="header"  data-theme="none" >
+                <span class="menuicon" onclick="utility.openPanel('popupPanellogdream')"></span>Who I dreamt of</div>
+            <div role="main" class="ui-content">
+                <div data-role="fieldcontain">
+                    <label for="privacy">Dream Visible to</label>
+                    <select id="visible" name="visible" class="input" data-iconpos="noicon">
+                        <option>Everyone</option>
+                        <option>Private</option>
+                        <option>Friends</option>
+
+                    </select>
+                </div>
+                <div data-role="fieldcontain">
+                    <label for="privacy">I Dreamt of</label>
+                    <div id="searchdiv"><input type="text" id="searchstring" name="searchstring" class="input"></div>
+                </div>
+                <!-- Hidden Variable-->
+                <input type="text" id="connectinguid" name="connectinguid" class="input" style="display:none;">
+                <input type="text" id="me" name="me" class="input" style="display:none;">
+                <!--end-->
+                <div id="rest" style="display:none;">
+                    <div data-role="fieldcontain" >
+                        <label for="relation">Relationship</label>
+                        <select id="relation" name="relation" class="input" data-iconpos="noicon">
+                            <option>Brother/Sister</option>
+                            <option>Friend</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="where">My Location</label>
+                        <select id="where" name="where" class="input" data-iconpos="noicon">
+                            <option>India</option>
+                            <option>Pakistan</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="when">In the Last</label>
+                        <select id="when" name="when" class="input" data-iconpos="noicon">
+                            <option>In the last 24 hrs</option>
+                            <option>In the last 2 days</option>
+                        </select>
+                    </div>
+                    <div data-role="fieldcontain">
+                        <label for="age">Age Groups</label>
+                        <select id="age" name="age" class="input" data-iconpos="noicon">
+                            <option>10-19 years</option>
+                            <option>20-29 years</option>
+                            <option>30 and above years</option>
+                        </select>
+                    </div>
+                    <button id="dream_post" name="submit" class="button">Log Dream</button>
+                </div>
+
+                <div id="friendslistdiv" class="ui-content">     
+                    <div class="poparr"><img class="popuparrow" src="img/popuparrow.png"/></div>
+                    <div class="closediv"><img id="close" src="img/cross.png"/></div>
+                    <div id="listuser">
+                        <ul id="users" data-role="listview" data-inset=true>
+
+                        </ul>
+                    </div>
+                    <button id="connect" name="submit" class="button">Not Sure ?</button>
+                </div>
+                <div id="createfriendnode" class="ui-content" style="max-width:800px; display: none; background: rgba(255, 255, 255, 0.19);">
+                    <a href="javascript:void(0)" data-rel="back" id="createfriendnodeclose" class="ui-btn ui-corner-all ui-shadow ui-btn-a ui-icon-delete ui-btn-icon-notext ui-btn-right">Close</a>
+                    <div class="popuparrow"><img class="popuparrow" src="img/popuparrow.png"/></div>
+                    <div class="closediv"><img id="cross" src="img/cross.png" /></div>
+                    <input id="connect_name" readonly name="connect_name" type="text"  placeholder="Name" class="input">
+                    <input id="connect_email" name="connect_email" type="text" placeholder="Email" class="input">
+                    <input id="connect_coo" name="fri_con_o" type="text" placeholder="Country of Origin" class="input">
+                    <input id="connect_residence" name="fri_con_r" type="text" placeholder="Country of Residence" class="input">
+                    <select id="ageuser" name="age" class="input" data-iconpos="noicon">
+                        <option>10-19years</option>
+                        <option>20-39years</option>
+                        <option>40-59years</option>
+                    </select>
+                    <button id="createfriend" name="submit" class="button">Done</button>
+                </div>
+            </div>
+            <div data-role="panel" class="panel" id="popupPanellogdream" data-position="left" data-display="overlay" data-corners="false" data-theme="none" data-shadow="false" data-tolerance="0,0">
+                <ul>
+                    <li class="mydream">My Dream</li>
+                    <li class="taggeddream">Tagged Dream</li>
+                    <li class="btn_dream_post">Log Dream</li>
+                    <li class="btn_view_profile">View Profile</li>
+                    <li class="btn_dreamfeed">Dreams Feed</li>
+                    <li class="logout">LogOut</li>
+                </ul>
+            </div>
+        </div><!-- Log Dream page end here -->
+
+
+        <div data-role="page" id="whodreamtofmepage" >
+            <!--div data-role="header" data-position="fixed" id="Whodreamthead" class="header"  data-theme="none" >
+                 <span class="menuicon"></span>Who dreamt of me</div>-->
+            <div data-role="header" class="header" data-theme="none"  id="Whodreamthead" >
+                <span class="menuicon" ></span>
+                Edit Profile
+                <span id="msgspan"></span>
+            </div>
+            <div data-role="content" >
+
+                <div class="who_dreams_me_datatdiv" >
+                    <div class="example-wrapper" data-iscroll>
+                        <ul data-role="listview">
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="main_tab_div main_tab_div_active">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                                <div class="show_dream_person_div">
+                                    <h4>Aran</h4>
+                                    <p>Dream of me</p>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon"></a>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <li class="unactive_li">
+                                <div class="main_tab_div">
+                                    <div class="user_profile_img">
+                                        <img src="img/image boy.png">
+                                    </div>
+                                    <div class="user_info_div">
+                                        <span class="light_bluecolor">Mathew</span><span class="show_address">in Derby</span>
+                                        <div class="smile_face_icon"><img src="img/smiley.png">
+                                        </div>
+                                        <strong class="show_time">Today at 1:00 p.m</strong>
+                                        <a href="#" class="thum_btn_icon_active"></a>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div> 
+                </div> 
+
+            </div>
+        </div>
+        <!-- Who dreamt of me page END here -->
+
+    </body>
+
+</html>
