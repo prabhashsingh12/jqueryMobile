@@ -274,6 +274,9 @@ var utility ={
         }
         
         console.log(e_mail + ':' + faml + '::' + gen + ':' + birth + '::' + cur + ':' + pre);
+		
+		if(birth!=null)
+		{
       
             var dt = new Date(birth);
             var mnts = dt.getMonth() + 1;
@@ -288,6 +291,7 @@ var utility ={
             document.getElementById('dy').value=dys;
             document.getElementById('mt').value=mnts;
             document.getElementById('yr').value=yrs;
+		}
        
         if (gen != '')
         {
@@ -346,9 +350,40 @@ var utility ={
         
             $.mobile.loading('hide');
             var res = JSON.parse(event);
-            
+            for(key in res)
+			{
+				var cl=res[key]; 
+				var nm=cl[0];
+				for(key2 in nm)
+				{
+					console.log(nm[key2]+"    in     "+cl[1]+"   on  "+cl[2]);console.log()
+					
+					$('#whoidreamtlist').append(
+					'<li class="unactive_li">'
+                    +'<div class="main_tab_div">'
+                    +'<div class="user_profile_img">'
+					+'<img src="img/image boy.png">'
+					+'</div>'
+					+'<div class="user_info_div">'
+					+'<span class="light_bluecolor">'+nm[key2]+'</span><span class="show_address">in '+cl[1]+'</span>'
+					+'<div class="smile_face_icon"><img src="img/smiley.png">'
+					+'</div>'
+					+'<strong class="show_time">Today at 1:00 p.m</strong>'
+					+'<a href="#" class="thum_btn_icon_active"></a></div></div></li>');
+					
+					
+			
+		
+					
+					
+				}
+			}
             console.log(res);
-        }).fail(function(jqXHR, textStatus) {
+			location.href='#whodreamtofmepage';
+
+			$('#whoidreamtlist').listview('refresh');
+         }).fail(function(jqXHR, textStatus) {
+
             if (textStatus == 'timeout')
             {
                // $.mobile.loading('hide');

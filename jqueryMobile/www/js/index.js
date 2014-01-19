@@ -78,7 +78,9 @@ $(document).ready(function() {
         utility.changePage('forgotpasswordpage');
     });
     $('.taggeddream').click(function(){
-        location.href='#whodreamtofmepage';
+		
+		utility.whoDreamtOfMe();
+		
     });
     //ViewProfile Page
 
